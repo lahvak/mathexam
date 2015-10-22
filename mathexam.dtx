@@ -20,7 +20,7 @@
 %
 % \fi
 %
-% \CheckSum{179}
+% \CheckSum{193}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -164,6 +164,17 @@
 %  \begin{verbatim}
 %  \documentclass[11pt]{article}
 %  \usepackage[nohdr]{mathexam}
+%  \end{verbatim}
+%
+% \DescribeMacro{nolastpage}
+% When using headers, the \texttt{mathexam} package uses the \texttt{lastpage}
+% package to typeset page numbers in the form ``page 3 of 15''.  Sometimes that
+% may not be what you want, for example when generating individualized exams
+% by a ``mail merge'' technique using \texttt{datatool}.  In that case, simply
+% use the \texttt{nolastpage} option to use just the page numbers:
+%  \begin{verbatim}
+%  \documentclass[11pt]{article}
+%  \usepackage[nolastpage]{mathexam}
 %  \end{verbatim}
 %
 % \subsection{Main Commands}
@@ -324,6 +335,9 @@
 \newif\ifExamHdr
 \ExamHdrtrue
 \DeclareOption{nohdr}{\ExamHdrfalse}
+\newif\ifLastpage
+\Lastpagetrue
+\DeclareOption{nolastpage}{\Lastpagefalse}
 \ProcessOptions
 %    \end{macrocode}
 %
@@ -331,7 +345,9 @@
 %    \begin{macrocode}
 \ifExamHdr
 \RequirePackage{fancyhdr}
+\ifLastpage
 \RequirePackage{lastpage}
+\fi
 \RequirePackage{ifthen}
 \fi
 %    \end{macrocode}
@@ -359,9 +375,16 @@
 
 \lhead{\@xamclass}
 \chead{\@xamname}
+\ifLastpage
 \rhead{Page \thepage\ of \pageref{LastPage}}
+\else
+\rhead{Page \thepage}
+\fi
 
+
+\ifLastpage
 \rfoot{\ifthenelse{\value{page}=\pageref{LastPage}}{The End.}{Cont.}}
+\fi
 \cfoot{}
 %    \end{macrocode}
 % Handle the first page differently:

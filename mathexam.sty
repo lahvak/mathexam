@@ -26,10 +26,15 @@
 \newif\ifExamHdr
 \ExamHdrtrue
 \DeclareOption{nohdr}{\ExamHdrfalse}
+\newif\ifLastpage
+\Lastpagetrue
+\DeclareOption{nolastpage}{\Lastpagefalse}
 \ProcessOptions
 \ifExamHdr
 \RequirePackage{fancyhdr}
+\ifLastpage
 \RequirePackage{lastpage}
+\fi
 \RequirePackage{ifthen}
 \fi
 \newcommand{\ExamName}[1]{\def\@xamname{#1}}
@@ -43,9 +48,15 @@
 
 \lhead{\@xamclass}
 \chead{\@xamname}
+\ifLastpage
 \rhead{Page \thepage\ of \pageref{LastPage}}
+\else
+\rhead{Page \thepage}
+\fi
 
+\ifLastpage
 \rfoot{\ifthenelse{\value{page}=\pageref{LastPage}}{The End.}{Cont.}}
+\fi
 \cfoot{}
 \AtBeginDocument{
 \begin{center}
